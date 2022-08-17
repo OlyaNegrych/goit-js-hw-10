@@ -12,9 +12,24 @@ body {
   line-height: 1.5;
 }
 
+li {
+  list-style: none;
+}
+
 #search-box {
   font: inherit;
   padding: 8px;
   max-width: 320px;
   margin-bottom: 16px;
+}
+
+.flag {
+  width: 50px;
+  height: auto;
+}
+
+.small-flag {
+  margin-right: 5px;
+  width: 20px;
+  height: auto;
 }
