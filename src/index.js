@@ -20,13 +20,6 @@ inputRef.addEventListener('input', debounce(onSearchCounty, DEBOUNCE_DELAY));
 function onSearchCounty(evt) {
   fetchCountries(evt.target.value);
   console.log(evt.target.value);
-
-  //  const filter = evt.target.value.toLowerCase();
-  //  const filteredCountries = countries.filter(country =>
-  //    country.name.toLowerCase().includes(filter)
-  //  );
-  //  const listItemsmarkup = createListMarkup(filteredCountries);
-  //  insertMarkup(listItemsmarkup);
 }
 
 function fetchCountries(name) {
@@ -36,10 +29,23 @@ function fetchCountries(name) {
     .then(response => {
       return response.json();
     })
-    .then(country => {
-      insertCountryMarkup(country);
+    .then(countries => {
+      if (countries.length > 10) {
+        Notiflix.Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
+      }
+      if (countries.length > 1 && countries.length < 10) {
+        insertListMarkup(countries);
+      }
+      if (countries.length === 1) {
+        countriesListRef.innerHTML = '';
+        insertCountryMarkup(countries);
+      }
     })
-    .catch(error => console.log(error));
+    .catch(
+      Notiflix.Notify.failure('Oops, there is no country with that name.')
+    );
 }
 
 function createCountryDescriptionMarkup(country) {
@@ -54,8 +60,8 @@ function createCountriesListMarkup(countries) {
   return countries
     .map(
       country => `<li>
-  <img class="small-flag" src="${country[0].flags.svg}" alt="${country[0].name.official}flag">
-  <span>${country[0].name.official}</span>
+  <img class="small-flag" src="${country.flags.svg}" alt="${country.name.official}flag">
+  <span>${country.name.official}</span>
 </li>`
     )
     .join('');
@@ -70,3 +76,11 @@ function insertCountryMarkup(country) {
   const markup = createCountryDescriptionMarkup(country);
   countryInfoRef.innerHTML = markup;
 }
+
+
+//  const filter = evt.target.value.toLowerCase();
+  //  const filteredCountries = countries.filter(country =>
+  //    country.name.toLowerCase().includes(filter)
+  //  );
+  //  const listItemsmarkup = createListMarkup(filteredCountries);
+  //  insertMarkup(listItemsmarkup);
